@@ -1,0 +1,21 @@
+{
+  "name": "firmable-icp-fit-scorecard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Score accounts against your ICP criteria with Firmable is_icp_fit and show each criterion.",
+  "type": "module",
+  "main": "dist/src/recipe.js",
+  "bin": {
+    "firmable-icp-fit-scorecard": "dist/src/cli.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "firmable-api-client": "0.1.0"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && node --test \"dist/tests/**/*.test.js\""
+  }
+}

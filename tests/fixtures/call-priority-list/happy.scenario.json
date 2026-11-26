@@ -1,0 +1,2136 @@
+{
+ "description": "Ten unique people over two batches covering P1, P2, P3, review, exclude_dnc, no_priority and not_found, with a duplicate and an invalid person ID.",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "path": "/decisions",
+    "query": {}
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "version": "v1",
+     "accepted_values": {
+      "seniorities": [
+       "Owner / Founder",
+       "C-Suite / Partner",
+       "Board Member / Company Director",
+       "VP/Director / Head of",
+       "Manager",
+       "Other"
+      ],
+      "departments": [
+       "Consulting",
+       "Customer Service",
+       "Education & Training",
+       "Engineering & Technical",
+       "Finance",
+       "General Management",
+       "Human Resources",
+       "Legal",
+       "Marketing",
+       "Medicine & Healthcare",
+       "Operations",
+       "Product",
+       "Research & Analysis",
+       "Sales",
+       "Trades",
+       "Other"
+      ]
+     },
+     "tools": [
+      {
+       "name": "matches_seniority",
+       "summary": "Is this person at one of the seniority levels you target? Reads the main title by rules against Firmable's levels: Owner / Founder, C-Suite / Partner, Board Member / Company Director, VP/Director / Head of, Manager, Other. Short forms such as Director also match; an unrecognised level answers no. For \"would they make the buying call\", use `is_decision_maker`.",
+       "subject": "person",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         },
+         "seniorities": {
+          "description": "Any one matches. Use Firmable's seniority labels: Owner / Founder, C-Suite / Partner, Board Member / Company Director, VP/Director / Head of, Manager, Other",
+          "items": {
+           "maxLength": 100,
+           "minLength": 1,
+           "type": "string"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Seniorities",
+          "type": "array"
+         }
+        },
+        "required": [
+         "seniorities"
+        ],
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "matched",
+        "seniority"
+       ],
+       "example": {
+        "person_id": "fp900000000001",
+        "seniorities": [
+         "C-Suite / Partner",
+         "VP/Director / Head of"
+        ]
+       }
+      },
+      {
+       "name": "matches_department",
+       "summary": "Does this person work in one of the departments you target? Reads the main title by rules against Firmable's departments (for example Finance, Sales, Marketing, Operations, Legal, Product, Engineering & Technical; full list in the accepted values). For \"would they make the buying call\", use `is_decision_maker`.",
+       "subject": "person",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         },
+         "departments": {
+          "description": "Any one matches, e.g. [\"Finance\", \"Operations\"]",
+          "items": {
+           "maxLength": 100,
+           "minLength": 1,
+           "type": "string"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Departments",
+          "type": "array"
+         }
+        },
+        "required": [
+         "departments"
+        ],
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "department",
+        "matched"
+       ],
+       "example": {
+        "person_id": "fp900000000001",
+        "departments": [
+         "Research & Analysis",
+         "Engineering & Technical"
+        ]
+       }
+      },
+      {
+       "name": "is_reachable",
+       "summary": "Can this person be reached: does Firmable hold a deliverable work email, or an Australian mobile not on Do Not Call? Mobiles outside Australia leave the answer unknown, not no. Use to find contactable people. For the email grade alone, use `is_email_valid`.",
+       "subject": "person",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "as_at",
+        "mobile_dnc_as_at",
+        "mobile_dnc_status",
+        "mobile_held",
+        "work_email_grade",
+        "work_email_held"
+       ],
+       "example": {
+        "person_id": "fp900000000001"
+       }
+      },
+      {
+       "name": "is_mobile_on_dnc",
+       "summary": "Is this person's mobile on the Australian Do Not Call register, as at Firmable's last refresh? Not a live check. Australian numbers only; others answer unknown. Without `mobile`, checks every mobile Firmable holds. Use for Australian cold-call compliance. For \"is the number valid\", use `is_mobile_valid`.",
+       "subject": "person",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         },
+         "mobile": {
+          "anyOf": [
+           {
+            "maxLength": 40,
+            "minLength": 6,
+            "pattern": "^[\\d\\s()+.\\-]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the mobile to check; defaults to every mobile Firmable holds. Never stored or returned",
+          "title": "Mobile"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "as_at",
+        "matched_held_mobile",
+        "number_checked",
+        "status",
+        "statuses"
+       ],
+       "example": {
+        "person_id": "fp900000000001"
+       }
+      },
+      {
+       "name": "is_decision_maker",
+       "summary": "Would this person make the call to buy what you sell, given their department, level and company size? Put what you sell and to whom in `seller`; `buyer` can name the team that buys it. For a seniority or department check alone, use `matches_seniority` or `matches_department`.",
+       "subject": "person",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         },
+         "seller": {
+          "description": "What you sell and to whom",
+          "maxLength": 2000,
+          "minLength": 3,
+          "title": "Seller",
+          "type": "string"
+         },
+         "buyer": {
+          "anyOf": [
+           {
+            "maxLength": 2000,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: which team buys it, e.g. 'CFO and finance team'",
+          "title": "Buyer"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the company you are selling to; must be their current employer",
+          "title": "Company Id"
+         }
+        },
+        "required": [
+         "seller"
+        ],
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "department",
+        "seniority",
+        "title"
+       ],
+       "example": {
+        "person_id": "fp900000000001",
+        "seller": "A data warehouse and analytics platform",
+        "buyer": "Head of data"
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "matches_seniority",
+     "question": {
+      "seniorities": [
+       "C-Suite / Partner",
+       "VP/Director / Head of"
+      ],
+      "records": [
+       {
+        "person_id": "fp900000000001",
+        "external_id": "subject-1"
+       },
+       {
+        "work_email": "alex.citizen@alpha.example",
+        "external_id": "subject-2"
+       },
+       {
+        "linkedin_url": "https://www.linkedin.com/in/sam-example",
+        "external_id": "subject-3"
+       },
+       {
+        "person_id": "fp900000000004",
+        "external_id": "subject-4"
+       },
+       {
+        "person_id": "fp900000000005",
+        "external_id": "subject-5"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "matches_seniority",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-1",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000001",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000001",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-2",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000002",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000002",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-3",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000003",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000003",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-4",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000004",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000004",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-5",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "matched": null,
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000005",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000005",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 5
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "matches_department",
+     "question": {
+      "departments": [
+       "Finance",
+       "Operations"
+      ],
+      "records": [
+       {
+        "person_id": "fp900000000001",
+        "external_id": "subject-1"
+       },
+       {
+        "work_email": "alex.citizen@alpha.example",
+        "external_id": "subject-2"
+       },
+       {
+        "linkedin_url": "https://www.linkedin.com/in/sam-example",
+        "external_id": "subject-3"
+       },
+       {
+        "person_id": "fp900000000004",
+        "external_id": "subject-4"
+       },
+       {
+        "person_id": "fp900000000005",
+        "external_id": "subject-5"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "matches_department",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-1",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000001",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000001",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-2",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000002",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000002",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-3",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": null
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000003",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000003",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-4",
+       "decision": "unknown",
+       "confidence": 0.9,
+       "details": {
+        "department": null,
+        "matched": null
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000004",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000004",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-5",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": null
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000005",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000005",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 4
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "is_reachable",
+     "question": {
+      "records": [
+       {
+        "person_id": "fp900000000001",
+        "external_id": "subject-1"
+       },
+       {
+        "work_email": "alex.citizen@alpha.example",
+        "external_id": "subject-2"
+       },
+       {
+        "linkedin_url": "https://www.linkedin.com/in/sam-example",
+        "external_id": "subject-3"
+       },
+       {
+        "person_id": "fp900000000004",
+        "external_id": "subject-4"
+       },
+       {
+        "person_id": "fp900000000005",
+        "external_id": "subject-5"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "is_reachable",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-1",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Highly likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000001",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000001",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-2",
+       "decision": "unknown",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": null,
+        "work_email_held": null
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000002",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000002",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-3",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000003",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000003",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-4",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000004",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000004",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-5",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Highly likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000005",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000005",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 4
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "is_mobile_on_dnc",
+     "question": {
+      "records": [
+       {
+        "person_id": "fp900000000001",
+        "external_id": "subject-1"
+       },
+       {
+        "work_email": "alex.citizen@alpha.example",
+        "external_id": "subject-2"
+       },
+       {
+        "linkedin_url": "https://www.linkedin.com/in/sam-example",
+        "external_id": "subject-3"
+       },
+       {
+        "person_id": "fp900000000004",
+        "external_id": "subject-4"
+       },
+       {
+        "person_id": "fp900000000005",
+        "external_id": "subject-5"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "is_mobile_on_dnc",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-1",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000001",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000001",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-2",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000002",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000002",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-3",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000003",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000003",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-4",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000004",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000004",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-5",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000005",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000005",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 5
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "matches_seniority",
+     "question": {
+      "seniorities": [
+       "C-Suite / Partner",
+       "VP/Director / Head of"
+      ],
+      "records": [
+       {
+        "person_id": "fp900000000006",
+        "external_id": "subject-6"
+       },
+       {
+        "work_email": "nobody@alpha.example",
+        "external_id": "subject-7"
+       },
+       {
+        "person_id": "fp900000000010",
+        "external_id": "subject-8"
+       },
+       {
+        "person_id": "fp900000000011",
+        "external_id": "subject-9"
+       },
+       {
+        "person_id": "fp900000000012",
+        "external_id": "subject-10"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "matches_seniority",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-6",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000006",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000006",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-7",
+       "decision": null,
+       "confidence": null,
+       "details": {},
+       "entity": {
+        "type": null,
+        "id": null,
+        "country": null,
+        "profile_url": null,
+        "company_url": null
+       },
+       "error": {
+        "code": "person_not_found",
+        "message": "This work email doesn't match a Firmable person."
+       },
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-8",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000010",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000010",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-9",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000011",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000011",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-10",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "matched": "C-Suite / Partner",
+        "seniority": "C-Suite / Partner"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000012",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000012",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 4
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "matches_department",
+     "question": {
+      "departments": [
+       "Finance",
+       "Operations"
+      ],
+      "records": [
+       {
+        "person_id": "fp900000000006",
+        "external_id": "subject-6"
+       },
+       {
+        "work_email": "nobody@alpha.example",
+        "external_id": "subject-7"
+       },
+       {
+        "person_id": "fp900000000010",
+        "external_id": "subject-8"
+       },
+       {
+        "person_id": "fp900000000011",
+        "external_id": "subject-9"
+       },
+       {
+        "person_id": "fp900000000012",
+        "external_id": "subject-10"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "matches_department",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-6",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000006",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000006",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-7",
+       "decision": null,
+       "confidence": null,
+       "details": {},
+       "entity": {
+        "type": null,
+        "id": null,
+        "country": null,
+        "profile_url": null,
+        "company_url": null
+       },
+       "error": {
+        "code": "person_not_found",
+        "message": "This work email doesn't match a Firmable person."
+       },
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-8",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000010",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000010",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-9",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000011",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000011",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-10",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "department": "Finance",
+        "matched": "Finance"
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000012",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000012",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 4
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "is_reachable",
+     "question": {
+      "records": [
+       {
+        "person_id": "fp900000000006",
+        "external_id": "subject-6"
+       },
+       {
+        "work_email": "nobody@alpha.example",
+        "external_id": "subject-7"
+       },
+       {
+        "person_id": "fp900000000010",
+        "external_id": "subject-8"
+       },
+       {
+        "person_id": "fp900000000011",
+        "external_id": "subject-9"
+       },
+       {
+        "person_id": "fp900000000012",
+        "external_id": "subject-10"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "is_reachable",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-6",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": null,
+        "work_email_held": false
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000006",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000006",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-7",
+       "decision": null,
+       "confidence": null,
+       "details": {},
+       "entity": {
+        "type": null,
+        "id": null,
+        "country": null,
+        "profile_url": null,
+        "company_url": null
+       },
+       "error": {
+        "code": "person_not_found",
+        "message": "This work email doesn't match a Firmable person."
+       },
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-8",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Highly likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000010",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000010",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-9",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Highly likely",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000011",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000011",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-10",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-20",
+        "mobile_dnc_as_at": "2026-11-18",
+        "mobile_dnc_status": null,
+        "mobile_held": true,
+        "work_email_grade": "Unsure",
+        "work_email_held": true
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000012",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000012",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 4
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "path": "/decisions",
+    "query": {},
+    "body": {
+     "tool": "is_mobile_on_dnc",
+     "question": {
+      "records": [
+       {
+        "person_id": "fp900000000006",
+        "external_id": "subject-6"
+       },
+       {
+        "work_email": "nobody@alpha.example",
+        "external_id": "subject-7"
+       },
+       {
+        "person_id": "fp900000000010",
+        "external_id": "subject-8"
+       },
+       {
+        "person_id": "fp900000000011",
+        "external_id": "subject-9"
+       },
+       {
+        "person_id": "fp900000000012",
+        "external_id": "subject-10"
+       }
+      ]
+     }
+    }
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "tool": "is_mobile_on_dnc",
+     "request_id": "req_synthetic",
+     "version": "v1",
+     "results": [
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-6",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "registered",
+        "statuses": [
+         "registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000006",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000006",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-7",
+       "decision": null,
+       "confidence": null,
+       "details": {},
+       "entity": {
+        "type": null,
+        "id": null,
+        "country": null,
+        "profile_url": null,
+        "company_url": null
+       },
+       "error": {
+        "code": "person_not_found",
+        "message": "This work email doesn't match a Firmable person."
+       },
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-8",
+       "decision": "yes",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "registered",
+        "statuses": [
+         "registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000010",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000010",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0,
+       "external_id": "subject-9",
+       "decision": "unknown",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": null,
+        "statuses": []
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000011",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000011",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": false
+       }
+      },
+      {
+       "request_id": "req_synthetic",
+       "version": "v1",
+       "answered_at": "2026-11-24T08:43:40Z",
+       "credits": 0.04,
+       "external_id": "subject-10",
+       "decision": "no",
+       "confidence": 0.9,
+       "details": {
+        "as_at": "2026-11-18",
+        "matched_held_mobile": null,
+        "number_checked": "held mobile",
+        "status": "not_registered",
+        "statuses": [
+         "not_registered"
+        ]
+       },
+       "entity": {
+        "type": "person",
+        "id": "fp900000000012",
+        "country": "AU",
+        "profile_url": "https://app.firmable.com/dashboard/person/fp900000000012",
+        "company_url": null
+       },
+       "error": null,
+       "usage": {
+        "billable": true
+       }
+      }
+     ],
+     "usage": {
+      "billable_rows": 3
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+row_id,domain,company_id,company_name,cohort
+k01,a1.example,,A1 Example,customers
+k02,a2.example,,A2 Example,customers
+k03,a3.example,,<b>A3</b> | Example,customers
+k04,b1.example,,B1 Example,prospects
+k05,,f900000000045,B2 Example,prospects
+k06,https://www.a1.example/,,A1 Example,prospects
+k07,x1.example,,X1 Example,partners
+k08,bad domain,,Bad Row,customers
+k09,b3.example,,B3 Example,prospects
+k10,a2.example,,A2 Example,customers
+k11,b4.example,,B4 Example,

@@ -1,0 +1,16 @@
+{
+  "target_seniorities": [
+    "C-Suite / Partner",
+    "VP/Director / Head of"
+  ],
+  "target_departments": [
+    "Finance",
+    "Operations"
+  ],
+  "decision_maker": {
+    "seller": "A finance automation platform for mid-size companies",
+    "buyer": "CFO and finance team"
+  },
+  "check_reachability": false,
+  "check_dnc": false
+}

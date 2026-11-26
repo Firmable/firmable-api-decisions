@@ -1,0 +1,11 @@
+{
+  "questions": [
+    {
+      "id": "multinational",
+      "label": "Multinational",
+      "tool": "is_multinational"
+    }
+  ],
+  "min_answered": 1,
+  "group_by": "region"
+}

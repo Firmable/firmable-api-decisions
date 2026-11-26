@@ -1,0 +1,7 @@
+row_id,domain,company_id,company_name
+r1,alpha.example,,Alpha
+r2,,f900000000002,Beta
+r3,https://www.alpha.example/about,,Alpha again
+r4,not a domain,,Bad
+r5,missing.example,,Missing
+r6,gamma.example,,Gamma

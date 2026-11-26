@@ -1,0 +1,10 @@
+[
+  {
+    "row_id": "s1",
+    "domain": "one.example"
+  },
+  {
+    "row_id": "s2",
+    "domain": "two.example"
+  }
+]

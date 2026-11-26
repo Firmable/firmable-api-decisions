@@ -1,0 +1,31 @@
+{
+  "questions": [
+    {
+      "id": "b2b",
+      "label": "Sells to businesses",
+      "tool": "is_b2b",
+      "inputs": {}
+    },
+    {
+      "id": "staff_200",
+      "label": "200 or more staff",
+      "tool": "matches_company_size",
+      "inputs": {
+        "min_staff": 200
+      }
+    },
+    {
+      "id": "au_code",
+      "label": "Head office in AU",
+      "tool": "is_located_in",
+      "inputs": {
+        "countries": [
+          "AU"
+        ]
+      }
+    }
+  ],
+  "with_reasoning": true,
+  "batch_size": 2,
+  "min_answered": 1
+}

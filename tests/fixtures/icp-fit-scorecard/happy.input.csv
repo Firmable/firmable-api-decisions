@@ -1,0 +1,9 @@
+row_id,domain,company_id,company_name,segment
+a1,alpha.example,,Alpha <b>Example</b>,Enterprise
+a2,,f900000000002,Beta Example,Mid-market
+a3,gamma.example,,Gamma Example,Mid-market
+a4,delta.example,,Delta Example,Enterprise
+a5,https://alpha.example/,,Alpha again,Enterprise
+a6,not a domain,,Bad,
+a7,missing.example,,Missing,
+a8,epsilon.example,,Epsilon Example,

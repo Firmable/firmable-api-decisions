@@ -1,0 +1,14 @@
+{
+  "target_seniorities": [
+    "C-Suite / Partner",
+    "VP/Director / Head of"
+  ],
+  "target_departments": [
+    "Finance",
+    "Operations"
+  ],
+  "check_reachability": false,
+  "check_dnc": false,
+  "with_reasoning": false,
+  "batch_size": 100
+}

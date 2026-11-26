@@ -1,0 +1,13 @@
+{
+  "questions": [
+    { "id": "b2b", "label": "Sells to businesses or government", "tool": "is_b2b", "inputs": {} },
+    { "id": "multinational", "label": "Operates in more than one country", "tool": "is_multinational", "inputs": {} },
+    { "id": "multiple_sites", "label": "Has more than one site", "tool": "has_multiple_sites", "inputs": {} },
+    { "id": "listed", "label": "Publicly listed", "tool": "is_publicly_listed", "inputs": {} },
+    { "id": "staff_200_plus", "label": "200 or more staff", "tool": "matches_company_size", "inputs": { "min_staff": 200 } }
+  ],
+  "with_reasoning": false,
+  "batch_size": 100,
+  "min_answered": 5,
+  "group_by": "segment"
+}

@@ -1,0 +1,15 @@
+{
+  "with_reasoning": true,
+  "fetch_company": true,
+  "batch_size": 100,
+  "questions": [
+    { "id": "b2b", "label": "Sells to other businesses", "tool": "is_b2b", "inputs": {} },
+    { "id": "multinational", "label": "Operates in more than one country", "tool": "is_multinational", "inputs": {} },
+    { "id": "multiple_sites", "label": "Has more than one site", "tool": "has_multiple_sites", "inputs": {} },
+    { "id": "listed", "label": "Publicly listed", "tool": "is_publicly_listed", "inputs": {} },
+    { "id": "public_sector", "label": "Public sector or non-profit", "tool": "is_public_sector_or_nonprofit", "inputs": {} },
+    { "id": "rd_tax", "label": "Claims the R&D tax incentive", "tool": "claims_rd_tax_incentive", "inputs": {} },
+    { "id": "company_phone", "label": "Firmable holds a company phone number", "tool": "has_company_phone", "inputs": {} },
+    { "id": "size_200", "label": "200 or more staff", "tool": "matches_company_size", "inputs": { "min_staff": 200 } }
+  ]
+}

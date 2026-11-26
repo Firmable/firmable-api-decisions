@@ -1,0 +1,33 @@
+{
+  "questions": [
+    {
+      "id": "b2b",
+      "label": "Sells to other businesses",
+      "tool": "is_b2b",
+      "inputs": {}
+    },
+    {
+      "id": "listed",
+      "label": "Publicly listed",
+      "tool": "is_publicly_listed",
+      "inputs": {}
+    },
+    {
+      "id": "size_200",
+      "label": "200 or more staff",
+      "tool": "matches_company_size",
+      "inputs": {
+        "min_staff": 200
+      }
+    },
+    {
+      "id": "rd_tax",
+      "label": "Claims the R&D tax incentive",
+      "tool": "claims_rd_tax_incentive",
+      "inputs": {}
+    }
+  ],
+  "with_reasoning": true,
+  "fetch_company": true,
+  "batch_size": 2
+}
