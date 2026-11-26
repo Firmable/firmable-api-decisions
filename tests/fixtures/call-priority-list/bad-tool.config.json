@@ -1,0 +1,12 @@
+{
+  "target_seniorities": [
+    "Chief"
+  ],
+  "target_departments": [
+    "Finance",
+    "Operations"
+  ],
+  "decision_maker": {
+    "seller": "Payroll software"
+  }
+}

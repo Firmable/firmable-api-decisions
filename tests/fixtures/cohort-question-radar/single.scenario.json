@@ -1,0 +1,711 @@
+{
+  "description": "JSON input, no reasoning, a group_by column missing from the input, and a batch row without external_id matched by position.",
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/decisions"
+      },
+      "response": {
+        "status": 200,
+        "json": {
+          "version": "v1",
+          "tools": [
+            {
+              "name": "is_b2b",
+              "summary": "Does this company sell to businesses or government, even if it also sells to consumers? Details say businesses, consumers or both. Use to screen out consumer businesses. For a specific product or service, use `offers_service`.",
+              "subject": "company",
+              "uses_decision_model": true,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "company_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^f\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable company ID; or give domain",
+                    "examples": [
+                      "f000002437529"
+                    ],
+                    "title": "Company Id"
+                  },
+                  "domain": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "minLength": 4,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+                    "title": "Domain"
+                  }
+                },
+                "title": "Input",
+                "type": "object"
+              },
+              "details": [
+                "sells_to"
+              ],
+              "example": {
+                "company_id": "f900000000001"
+              }
+            },
+            {
+              "name": "matches_company_size",
+              "summary": "Is this company's staff count inside the range you give (`min_staff`, `max_staff`), worldwide or, with `staff_in`, in one of the 13 markets? Unknown where Firmable doesn't hold the count for that country. Use for a size check alone. For a full fit check with other criteria, use `is_icp_fit`.",
+              "subject": "company",
+              "uses_decision_model": false,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "company_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^f\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable company ID; or give domain",
+                    "examples": [
+                      "f000002437529"
+                    ],
+                    "title": "Company Id"
+                  },
+                  "domain": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "minLength": 4,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+                    "title": "Domain"
+                  },
+                  "min_staff": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Fewest staff, inclusive. Give this, max_staff or both",
+                    "title": "Min Staff"
+                  },
+                  "max_staff": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Most staff, inclusive. Give this, min_staff or both",
+                    "title": "Max Staff"
+                  },
+                  "staff_in": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "AU",
+                          "NZ",
+                          "SG",
+                          "MY",
+                          "ID",
+                          "PH",
+                          "HK",
+                          "JP",
+                          "VN",
+                          "KR",
+                          "TH",
+                          "US",
+                          "CA"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Count staff in this country only, e.g. AU; leave out to count worldwide",
+                    "title": "Staff In"
+                  }
+                },
+                "title": "Input",
+                "type": "object"
+              },
+              "details": [
+                "counted",
+                "staff_band",
+                "staff_count"
+              ],
+              "example": {
+                "company_id": "f900000000001",
+                "min_staff": 1000,
+                "max_staff": 10000
+              }
+            },
+            {
+              "name": "is_located_in",
+              "summary": "Is this company's head office (or any office), or this person, in the countries or places you target? Give one company or one person. `countries` takes two-letter codes such as `AU`, not names; `places` takes states, cities or suburbs. For \"has an office in\", set `where` to `any_office`; the default `head_office` checks the head office only. For staff numbers in a country, use `has_local_team`.",
+              "subject": "company or person",
+              "uses_decision_model": true,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "company_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^f\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable company ID; give one company or person field",
+                    "title": "Company Id"
+                  },
+                  "domain": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "minLength": 4,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+                    "title": "Domain"
+                  },
+                  "person_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^fp\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable person ID; give one company or person field",
+                    "title": "Person Id"
+                  },
+                  "linkedin_url": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+                    "title": "Linkedin Url"
+                  },
+                  "work_email": {
+                    "anyOf": [
+                      {
+                        "maxLength": 254,
+                        "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Their work email. Used to find them only; never stored or echoed",
+                    "title": "Work Email"
+                  },
+                  "countries": {
+                    "description": "Two-letter ISO country codes, e.g. AU, or country names; any one matches",
+                    "items": {
+                      "maxLength": 100,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 50,
+                    "title": "Countries",
+                    "type": "array"
+                  },
+                  "places": {
+                    "description": "States, cities or suburbs; any one matches, e.g. ['VIC', 'Sydney']",
+                    "items": {
+                      "maxLength": 100,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 50,
+                    "title": "Places",
+                    "type": "array"
+                  },
+                  "where": {
+                    "default": "head_office",
+                    "description": "Companies only: the head office (default), or any office or market it has staff in",
+                    "enum": [
+                      "head_office",
+                      "any_office"
+                    ],
+                    "title": "Where",
+                    "type": "string"
+                  }
+                },
+                "title": "Input",
+                "type": "object"
+              },
+              "details": [
+                "location_checked",
+                "location_held",
+                "places"
+              ],
+              "example": {
+                "company_id": "f900000000001",
+                "countries": [
+                  "AU"
+                ],
+                "places": [
+                  "VIC"
+                ]
+              }
+            },
+            {
+              "name": "offers_service",
+              "summary": "Does this company provide the product or service you name in `service`? Use to confirm a competitor, partner or supplier, one company at a time. For who it sells to, use `is_b2b`.",
+              "subject": "company",
+              "uses_decision_model": true,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "company_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^f\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable company ID; or give domain",
+                    "examples": [
+                      "f000002437529"
+                    ],
+                    "title": "Company Id"
+                  },
+                  "domain": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "minLength": 4,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+                    "title": "Domain"
+                  },
+                  "service": {
+                    "description": "The product or service, e.g. 'managed IT services' or 'cold chain logistics'",
+                    "maxLength": 2000,
+                    "minLength": 3,
+                    "title": "Service",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "service"
+                ],
+                "title": "Input",
+                "type": "object"
+              },
+              "details": [],
+              "example": {
+                "company_id": "f900000000001",
+                "service": "Cold chain logistics"
+              }
+            },
+            {
+              "name": "is_new_to_role",
+              "summary": "Did this person start their current role recently (`within_months`, default 6)? `count_internal_moves` (default true) counts a new role at the same company. Use for \"new in role\" outreach at any level. For executives only, use `is_new_exec`. For a change since your own date, use `has_changed_jobs_since`.",
+              "subject": "person",
+              "uses_decision_model": false,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "person_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^fp\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable person ID; or give linkedin_url or work_email",
+                    "examples": [
+                      "fp000463941370"
+                    ],
+                    "title": "Person Id"
+                  },
+                  "linkedin_url": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+                    "title": "Linkedin Url"
+                  },
+                  "work_email": {
+                    "anyOf": [
+                      {
+                        "maxLength": 254,
+                        "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Their work email. Used to find them only; never stored or echoed",
+                    "title": "Work Email"
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "minLength": 2,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+                    "title": "Name"
+                  },
+                  "company": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "minLength": 2,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+                    "title": "Company"
+                  },
+                  "within_months": {
+                    "default": 6,
+                    "description": "How recent counts as new, in months, inclusive",
+                    "maximum": 60,
+                    "minimum": 1,
+                    "title": "Within Months",
+                    "type": "integer"
+                  },
+                  "count_internal_moves": {
+                    "default": true,
+                    "description": "Count a new role at the same company as a change",
+                    "title": "Count Internal Moves",
+                    "type": "boolean"
+                  }
+                },
+                "title": "Input",
+                "type": "object"
+              },
+              "details": [
+                "inside_same_company",
+                "months_at_company",
+                "months_in_role",
+                "started",
+                "title"
+              ],
+              "example": {
+                "person_id": "fp900000000001",
+                "within_months": 12
+              }
+            },
+            {
+              "name": "is_multinational",
+              "summary": "Is this company recorded in two or more countries (staff, offices or a regional record)? For one named country, use `has_local_team` or `is_located_in`.",
+              "subject": "company",
+              "uses_decision_model": false,
+              "input_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "external_id": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Your own ID for this row, echoed back",
+                    "title": "External Id"
+                  },
+                  "company_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^f\\d{12}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Firmable company ID; or give domain",
+                    "examples": [
+                      "f000002437529"
+                    ],
+                    "title": "Company Id"
+                  },
+                  "domain": {
+                    "anyOf": [
+                      {
+                        "maxLength": 300,
+                        "minLength": 4,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+                    "title": "Domain"
+                  }
+                },
+                "title": "CompanyInput",
+                "type": "object"
+              },
+              "details": [
+                "countries"
+              ],
+              "example": {
+                "company_id": "f900000000001"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "path": "/decisions",
+        "query": {},
+        "body": {
+          "tool": "is_multinational",
+          "question": {
+            "records": [
+              {
+                "domain": "one.example",
+                "external_id": "c-1"
+              },
+              {
+                "domain": "two.example",
+                "external_id": "c-2"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "json": {
+          "tool": "is_multinational",
+          "request_id": "req_batch",
+          "version": "v1",
+          "results": [
+            {
+              "request_id": "req_c-1",
+              "version": "v1",
+              "answered_at": "2026-11-20T05:24:50Z",
+              "credits": 0.04,
+              "external_id": "c-1",
+              "decision": "yes",
+              "confidence": 0.9,
+              "details": {
+                "countries": [
+                  "AU",
+                  "NZ"
+                ]
+              },
+              "entity": {
+                "type": "company",
+                "id": "f900000000031",
+                "country": "AU",
+                "profile_url": "https://app.firmable.com/dashboard/company/f900000000031",
+                "company_url": null
+              },
+              "error": null,
+              "usage": {
+                "billable": true
+              }
+            },
+            {
+              "request_id": "req_c-2",
+              "version": "v1",
+              "answered_at": "2026-11-20T05:24:50Z",
+              "credits": 0.04,
+              "external_id": null,
+              "decision": "no",
+              "confidence": 0.9,
+              "details": {
+                "countries": [
+                  "AU"
+                ]
+              },
+              "entity": {
+                "type": "company",
+                "id": "f900000000032",
+                "country": "AU",
+                "profile_url": "https://app.firmable.com/dashboard/company/f900000000032",
+                "company_url": null
+              },
+              "error": null,
+              "usage": {
+                "billable": true
+              }
+            }
+          ],
+          "usage": {
+            "billable_rows": 2
+          }
+        }
+      }
+    }
+  ]
+}

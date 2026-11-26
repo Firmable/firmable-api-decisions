@@ -1,0 +1,11 @@
+row_id,domain,company_name,segment
+c01,canva.com,Canva,Software
+c02,atlassian.com,Atlassian,Software
+c03,xero.com,Xero,Software
+c04,safetyculture.com,SafetyCulture,Software
+c05,employmenthero.com,Employment Hero,Software
+c06,afterpay.com,Afterpay,Payments
+c07,airwallex.com,Airwallex,Payments
+c08,linfox.com,Linfox,Logistics
+c09,seek.com.au,SEEK,Marketplaces
+c10,culturekings.com.au,Culture Kings,Retail

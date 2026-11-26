@@ -1,0 +1,18 @@
+{
+  "questions": [
+    {
+      "id": "b2b",
+      "label": "Sells to other businesses",
+      "tool": "is_b2b",
+      "inputs": {}
+    },
+    {
+      "id": "listed",
+      "label": "Publicly listed",
+      "tool": "is_publicly_listed",
+      "inputs": {}
+    }
+  ],
+  "with_reasoning": false,
+  "fetch_company": false
+}

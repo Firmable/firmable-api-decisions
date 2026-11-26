@@ -1,0 +1,26 @@
+[
+  {
+    "domain": "n1.example",
+    "cohort": "2025"
+  },
+  {
+    "domain": "n2.example",
+    "cohort": "2025"
+  },
+  {
+    "domain": "n3.example",
+    "cohort": "2025"
+  },
+  {
+    "domain": "n4.example",
+    "cohort": "2026"
+  },
+  {
+    "domain": "n5.example",
+    "cohort": "2026"
+  },
+  {
+    "domain": "n6.example",
+    "cohort": "2026"
+  }
+]

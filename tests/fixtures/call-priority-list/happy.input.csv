@@ -1,0 +1,13 @@
+row_id,person_id,work_email,linkedin_url,name,company
+p1,fp900000000001,,,Alex <b>Example</b>,Alpha Example
+p2,,alex.citizen@alpha.example,,Alex Citizen,Alpha Example
+p3,,,https://www.linkedin.com/in/sam-example,Sam Example,Beta Example
+p4,fp900000000004,,,Jo Example,Beta Example
+p5,fp900000000005,,,Lee Example,Gamma Example
+p6,fp900000000006,,,Kim Example,Gamma Example
+p7,,nobody@alpha.example,,Nobody Example,Alpha Example
+p8,fp900000000001,,,Alex Example again,Alpha Example
+p9,not-an-id,,,Bad Example,
+p10,fp900000000010,,,Pat Example,Delta Example
+p11,fp900000000011,,,Chris Example,Delta Example
+p12,fp900000000012,,,Robin Example,Delta Example

@@ -1,0 +1,40 @@
+{
+  "icp": {
+    "min_staff": 100,
+    "countries": [
+      "AU",
+      "NZ"
+    ],
+    "criteria": [
+      "Sells to other businesses",
+      "Has a sales team",
+      "Operates warehouses in Australia"
+    ]
+  },
+  "with_reasoning": true,
+  "batch_size": 3,
+  "tiers": [
+    {
+      "id": "tier_1",
+      "label": "Tier 1: strong fit",
+      "when": {
+        "fit": "yes",
+        "min_criteria_met": 2
+      }
+    },
+    {
+      "id": "tier_2",
+      "label": "Tier 2: fit",
+      "when": {
+        "fit": "yes"
+      }
+    },
+    {
+      "id": "check",
+      "label": "Check by hand",
+      "when": {
+        "fit": "unknown"
+      }
+    }
+  ]
+}

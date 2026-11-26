@@ -1,0 +1,583 @@
+{
+ "description": "The configuration names an unknown tool, a person tool and a wrong input; no paid call is made.",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "path": "/decisions",
+    "query": {}
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "version": "v1",
+     "tools": [
+      {
+       "name": "is_b2b",
+       "summary": "Does this company sell to businesses or government, even if it also sells to consumers? Details say businesses, consumers or both. Use to screen out consumer businesses. For a specific product or service, use `offers_service`.",
+       "subject": "company",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "sells_to"
+       ],
+       "example": {
+        "company_id": "f900000000001"
+       }
+      },
+      {
+       "name": "is_publicly_listed",
+       "summary": "Is this company listed on a stock exchange Firmable holds (16 lists across the 13 markets)? A no names the lists checked and their date. `exchanges` limits the check to the lists you name, using Firmable's exchange names. For company type, use `matches_company_type`.",
+       "subject": "company",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         },
+         "exchanges": {
+          "description": "Only these exchanges, e.g. ['ASX', 'NZX']; defaults to all of them",
+          "items": {
+           "enum": [
+            "ASX",
+            "NZX",
+            "Hong Kong Stock Exchange",
+            "Tokyo Stock Exchange",
+            "Singapore Exchange",
+            "Bursa Malaysia",
+            "Indonesia Stock Exchange",
+            "Philippine Stock Exchange",
+            "SET",
+            "HOSE",
+            "KRX",
+            "Nasdaq",
+            "NYSE",
+            "NYSE American",
+            "TSX",
+            "CSE"
+           ],
+           "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Exchanges",
+          "type": "array"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "exchange",
+        "exchanges_checked",
+        "list_loaded"
+       ],
+       "example": {
+        "company_id": "f900000000001"
+       }
+      },
+      {
+       "name": "matches_company_size",
+       "summary": "Is this company's staff count inside the range you give (`min_staff`, `max_staff`), worldwide or, with `staff_in`, in one of the 13 markets? Unknown where Firmable doesn't hold the count for that country. Use for a size check alone. For a full fit check with other criteria, use `is_icp_fit`.",
+       "subject": "company",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         },
+         "min_staff": {
+          "anyOf": [
+           {
+            "maximum": 10000000,
+            "minimum": 1,
+            "type": "integer"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Fewest staff, inclusive. Give this, max_staff or both",
+          "title": "Min Staff"
+         },
+         "max_staff": {
+          "anyOf": [
+           {
+            "maximum": 10000000,
+            "minimum": 1,
+            "type": "integer"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Most staff, inclusive. Give this, min_staff or both",
+          "title": "Max Staff"
+         },
+         "staff_in": {
+          "anyOf": [
+           {
+            "enum": [
+             "AU",
+             "NZ",
+             "SG",
+             "MY",
+             "ID",
+             "PH",
+             "HK",
+             "JP",
+             "VN",
+             "KR",
+             "TH",
+             "US",
+             "CA"
+            ],
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Count staff in this country only, e.g. AU; leave out to count worldwide",
+          "title": "Staff In"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "counted",
+        "staff_band",
+        "staff_count"
+       ],
+       "example": {
+        "company_id": "f900000000001",
+        "min_staff": 1000,
+        "max_staff": 10000
+       }
+      },
+      {
+       "name": "claims_rd_tax_incentive",
+       "summary": "Does this company claim the Australian R&D tax incentive, and for which income year? Australian companies only; others answer unknown. Use as a sign that a company does R&D.",
+       "subject": "company",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "income_year",
+        "list_loaded"
+       ],
+       "example": {
+        "company_id": "f900000000002"
+       }
+      },
+      {
+       "name": "matches_company_type",
+       "summary": "Is this company one of the company types in Firmable search (Private company, Public company, Individual/sole trader, Associations, Partnership, Government, Trust, Superannuation fund)? A company on a stock exchange list counts as a Public company. For \"government, charity, school or university\", use `is_public_sector_or_nonprofit`. For listing, use `is_publicly_listed`.",
+       "subject": "company",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         },
+         "types": {
+          "description": "Any one matches, from Firmable search's company types: Associations, Government, Individual/sole trader, Partnership, Private company, Public company, Superannuation fund, Trust",
+          "items": {
+           "maxLength": 100,
+           "minLength": 1,
+           "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Types",
+          "type": "array"
+         }
+        },
+        "required": [
+         "types"
+        ],
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "list_loaded",
+        "register",
+        "type_held",
+        "type_matched"
+       ],
+       "example": {
+        "company_id": "f900000000001",
+        "types": [
+         "Private company"
+        ]
+       }
+      },
+      {
+       "name": "works_at_company",
+       "summary": "Does this person work at this company now? Give the company as `company_id` (from a company answer's `entity.id`). Use to confirm a contact's employer. For past employers, use `previously_worked_at`. For whether they still hold your title, use `is_contact_current`.",
+       "subject": "person",
+       "uses_decision_model": false,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "person_id": {
+          "anyOf": [
+           {
+            "pattern": "^fp\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable person ID; or give linkedin_url or work_email",
+          "examples": [
+           "fp000463941370"
+          ],
+          "title": "Person Id"
+         },
+         "linkedin_url": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "pattern": "(?i)linkedin\\.com/in/([^/?#\\s]+)",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their LinkedIn profile URL, e.g. https://www.linkedin.com/in/jane-doe",
+          "title": "Linkedin Url"
+         },
+         "work_email": {
+          "anyOf": [
+           {
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Their work email. Used to find them only; never stored or echoed",
+          "title": "Work Email"
+         },
+         "name": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: the person's name as you hold it; a mismatch gives unknown",
+          "title": "Name"
+         },
+         "company": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "minLength": 2,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Optional: their employer as you hold it; a mismatch gives unknown",
+          "title": "Company"
+         },
+         "company_id": {
+          "description": "The Firmable company ID to check",
+          "examples": [
+           "f000002437529"
+          ],
+          "pattern": "^f\\d{12}$",
+          "title": "Company Id",
+          "type": "string"
+         }
+        },
+        "required": [
+         "company_id"
+        ],
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "current_employer",
+        "matched_by",
+        "title"
+       ],
+       "example": {
+        "person_id": "fp900000000001",
+        "company_id": "f900000000001"
+       }
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

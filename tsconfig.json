@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "shared/typescript"
+    },
+    {
+      "path": "recipes/cohort-question-radar/typescript"
+    },
+    {
+      "path": "recipes/company-fact-brief/typescript"
+    },
+    {
+      "path": "recipes/cohort-comparison/typescript"
+    },
+    {
+      "path": "recipes/icp-fit-scorecard/typescript"
+    },
+    {
+      "path": "recipes/call-priority-list/typescript"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "icp": {
+    "min_staff": 200,
+    "staff_in": "AU",
+    "countries": ["AU", "NZ"],
+    "criteria": [
+      "Sells to other businesses",
+      "Has a sales team",
+      "Sells a software product"
+    ]
+  },
+  "with_reasoning": true,
+  "batch_size": 100,
+  "tiers": [
+    { "id": "tier_1", "label": "Tier 1: fit, two or more criteria shown as met", "when": { "fit": "yes", "min_criteria_met": 2 } },
+    { "id": "tier_2", "label": "Tier 2: fit", "when": { "fit": "yes" } },
+    { "id": "check", "label": "Check by hand", "when": { "fit": "unknown" } }
+  ]
+}

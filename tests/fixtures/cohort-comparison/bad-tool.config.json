@@ -1,0 +1,19 @@
+{
+  "cohorts": [
+    "customers",
+    "prospects"
+  ],
+  "questions": [
+    {
+      "id": "person_tool",
+      "tool": "is_new_to_role"
+    },
+    {
+      "id": "size",
+      "tool": "matches_company_size",
+      "inputs": {
+        "staff": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "questions": [
+    {
+      "id": "b2b",
+      "label": "Sells to businesses",
+      "tool": "is_b2b",
+      "inputs": {}
+    }
+  ],
+  "with_reasoning": false,
+  "batch_size": 2,
+  "min_answered": 1
+}

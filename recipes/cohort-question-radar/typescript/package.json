@@ -1,0 +1,21 @@
+{
+  "name": "firmable-cohort-question-radar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ask the same Firmable Decisions questions across a company cohort and explore the answers.",
+  "type": "module",
+  "main": "dist/src/recipe.js",
+  "bin": {
+    "firmable-cohort-question-radar": "dist/src/cli.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "firmable-api-client": "0.1.0"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && node --test \"dist/tests/**/*.test.js\""
+  }
+}

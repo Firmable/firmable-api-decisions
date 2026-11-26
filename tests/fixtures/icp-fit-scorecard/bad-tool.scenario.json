@@ -1,0 +1,85 @@
+{
+ "description": "is_icp_fit is missing from the tool list; no paid call is made.",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "path": "/decisions",
+    "query": {}
+   },
+   "response": {
+    "status": 200,
+    "json": {
+     "version": "v1",
+     "tools": [
+      {
+       "name": "is_b2b",
+       "summary": "Does this company sell to businesses or government, even if it also sells to consumers? Details say businesses, consumers or both. Use to screen out consumer businesses. For a specific product or service, use `offers_service`.",
+       "subject": "company",
+       "uses_decision_model": true,
+       "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "external_id": {
+          "anyOf": [
+           {
+            "maxLength": 200,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Your own ID for this row, echoed back",
+          "title": "External Id"
+         },
+         "company_id": {
+          "anyOf": [
+           {
+            "pattern": "^f\\d{12}$",
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "Firmable company ID; or give domain",
+          "examples": [
+           "f000002437529"
+          ],
+          "title": "Company Id"
+         },
+         "domain": {
+          "anyOf": [
+           {
+            "maxLength": 300,
+            "minLength": 4,
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ],
+          "default": null,
+          "description": "The company's domain or website, e.g. linfox.com. Personal mail and parked domains never match",
+          "title": "Domain"
+         }
+        },
+        "title": "Input",
+        "type": "object"
+       },
+       "details": [
+        "sells_to"
+       ],
+       "example": {
+        "company_id": "f900000000001"
+       }
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+  "cohorts": [
+    "customers",
+    "prospects"
+  ],
+  "questions": [
+    {
+      "id": "b2b",
+      "label": "Sells to businesses",
+      "tool": "is_b2b",
+      "inputs": {}
+    },
+    {
+      "id": "staff_200",
+      "label": "200 or more staff",
+      "tool": "matches_company_size",
+      "inputs": {
+        "min_staff": 200
+      }
+    }
+  ],
+  "with_reasoning": true,
+  "batch_size": 3,
+  "min_answered": 2
+}

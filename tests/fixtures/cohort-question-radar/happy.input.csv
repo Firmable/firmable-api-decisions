@@ -1,0 +1,12 @@
+row_id,domain,company_id,company_name,segment
+r01,alpha.example,,Alpha Example,Software
+r02,beta.example,,Beta Example,Software
+r03,gamma.example,,Gamma Example,Payments
+r04,https://www.alpha.example/about,,Alpha Example,Software
+r05,not a domain,,Broken Row,Software
+r06,,f900000000006,Zeta Example,Payments
+r07,delta.example,,Delta Example,Logistics
+r08,epsilon.example,,<b>Eps</b>,
+r09,beta.example,,Beta Example,Payments
+r10,,f123,Short ID,Payments
+r11,eta.example,,Eta Example,Software

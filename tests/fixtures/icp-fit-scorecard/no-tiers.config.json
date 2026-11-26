@@ -1,0 +1,15 @@
+{
+  "icp": {
+    "min_staff": 100,
+    "countries": [
+      "AU",
+      "NZ"
+    ],
+    "criteria": [
+      "Sells to other businesses",
+      "Has a sales team",
+      "Operates warehouses in Australia"
+    ]
+  },
+  "with_reasoning": false
+}

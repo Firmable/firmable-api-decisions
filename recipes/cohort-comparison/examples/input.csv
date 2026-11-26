@@ -1,0 +1,11 @@
+row_id,domain,company_name,cohort
+c01,canva.com,Canva,customers
+c02,atlassian.com,Atlassian,customers
+c03,xero.com,Xero,customers
+c04,safetyculture.com,SafetyCulture,customers
+c05,employmenthero.com,Employment Hero,customers
+p01,afterpay.com,Afterpay,prospects
+p02,airwallex.com,Airwallex,prospects
+p03,linfox.com,Linfox,prospects
+p04,seek.com.au,SEEK,prospects
+p05,culturekings.com.au,Culture Kings,prospects

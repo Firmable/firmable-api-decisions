@@ -1,0 +1,23 @@
+{
+  "questions": [
+    {
+      "id": "imaginary",
+      "tool": "is_imaginary",
+      "inputs": {}
+    },
+    {
+      "id": "person_tool",
+      "tool": "works_at_company",
+      "inputs": {
+        "company_id": "f900000000001"
+      }
+    },
+    {
+      "id": "type",
+      "tool": "matches_company_type",
+      "inputs": {
+        "colour": "orange"
+      }
+    }
+  ]
+}
